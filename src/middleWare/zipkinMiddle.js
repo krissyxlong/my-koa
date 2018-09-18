@@ -5,7 +5,7 @@ const {
   const url = require('url');
   
   function formatRequestUrl(req) {
-    const parsed = url.parse(req.originalUrl);
+    const parsed = url.parse(req.origin);
     return url.format({
       protocol: req.protocol,
       host: req.get('host'),

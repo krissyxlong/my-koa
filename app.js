@@ -19,7 +19,7 @@ const tracer = new Tracer({
   ctxImpl: new CLSContext('zipkin'),
   recorder: new BatchRecorder({
     logger: new HttpLogger({
-      endpoint: 'http://localhost:3005/api/v2/spans',
+      endpoint: 'http://localhost:3005',
       jsonEncoder: JSON_V2
     })
   }),
@@ -27,10 +27,10 @@ const tracer = new Tracer({
 });
   
 
-app.use(zipkinMiddleware({ 
-  tracer, 
-  serviceName: 'kuma-node' // name of this application 
-})); 
+// app.use(zipkinMiddleware({ 
+//   tracer, 
+//   serviceName: 'kuma-node' // name of this application 
+// })); 
 
 
 // const router = new Router({prefix: '/users'}) // 生成路由前缀
