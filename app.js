@@ -1,19 +1,42 @@
 const Koa = require('koa');
 const app = new Koa();
 const cors = require('koa2-cors');
-const parseRoute = require('path-to-regexp');
 const bodyParser = require('koa-bodyparser');
 const router = require('koa-router')();
+const index = require('./src/servers/index/s1');
 
-const index = require('./servers/index/s1');
+const {
+  Tracer,
+  BatchRecorder,
+  jsonEncoder: {JSON_V2}
+} = require('zipkin');
+const zipkinMiddleware = require('zipkin-instrumentation-express').expressMiddleware; ;
+const CLSContext = require('zipkin-context-cls');
+const {HttpLogger} = require('zipkin-transport-http');
+
+// Setup the tracer to use http and implicit trace context
+const tracer = new Tracer({
+  ctxImpl: new CLSContext('zipkin'),
+  recorder: new BatchRecorder({
+    logger: new HttpLogger({
+      endpoint: 'http://localhost:300/api/v2/spans',
+      jsonEncoder: JSON_V2
+    })
+  }),
+  localServiceName: 'kuma-node' // name of this application
+});
+  
 
 // const router = new Router({prefix: '/users'}) // 生成路由前缀
+// app.use(zipkinMiddleware({ 
+//   tracer, 
+//   serviceName: 'kuma-node' // name of this application 
+//   })); 
 app.use(bodyParser());
 app.use(cors());
-// app.use(bodyParser())
 
 app.use(async (ctx, next) => {
-  console.log('000000000:', ctx.request.body);
+  console.log('request body:', ctx.request.body);
   await next();
   // const rt = ctx.response.get('X-Response-Time');
   // console.log(`${ctx.method} ${ctx.url} - ${rt}`);

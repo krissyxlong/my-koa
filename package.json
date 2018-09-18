@@ -25,6 +25,10 @@
     "node-fetch": "^2.2.0",
     "querystring": "^0.2.0",
     "zipkin": "^0.14.2",
-    "zipkin-instrumentation-fetch": "^0.14.2"
+    "zipkin-context-cls": "^0.14.2",
+    "zipkin-instrumentation-express": "^0.14.2",
+    "zipkin-instrumentation-fetch": "^0.14.2",
+    "zipkin-instrumentation-koa": "^0.0.6",
+    "zipkin-transport-http": "^0.14.2"
   }
 }
