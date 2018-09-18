@@ -12,17 +12,17 @@ const {
     ctxImpl: new CLSContext('zipkin'),
     recorder: new BatchRecorder({
       logger: new HttpLogger({
-        endpoint: 'http://localhost:3005',
+        endpoint: 'http://localhost:3005/api/v2/spans',
         jsonEncoder: JSON_V2
       })
     }),
-    localServiceName: 'service-a' // name of this application
+    localServiceName: 'kuma-node' // name of this application
   });
   
   // now use tracer to construct instrumentation! For example, fetch
   const wrapFetch = require('zipkin-instrumentation-fetch');
   
-  const remoteServiceName = 'youtube';
+  const remoteServiceName = 'kuma-node';
   const zipkinFetch = wrapFetch(fetch, {tracer, remoteServiceName});
 
 
@@ -31,7 +31,7 @@ module.exports = async (url, options={}) => {
     if (!url) {
         return new Error('missing paramter url')
     }
-    const res = await fetch(url, {
+    const res = await zipkinFetch(url, {
         ...options
     }).then(resonse => {
         return resonse.text();

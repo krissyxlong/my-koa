@@ -10,7 +10,7 @@ const {
   BatchRecorder,
   jsonEncoder: {JSON_V2}
 } = require('zipkin');
-const zipkinMiddleware = require('zipkin-instrumentation-express').expressMiddleware; ;
+const zipkinMiddleware = require('./src/middleWare/zipkinMiddle');
 const CLSContext = require('zipkin-context-cls');
 const {HttpLogger} = require('zipkin-transport-http');
 
@@ -19,7 +19,7 @@ const tracer = new Tracer({
   ctxImpl: new CLSContext('zipkin'),
   recorder: new BatchRecorder({
     logger: new HttpLogger({
-      endpoint: 'http://localhost:300/api/v2/spans',
+      endpoint: 'http://localhost:3005/api/v2/spans',
       jsonEncoder: JSON_V2
     })
   }),
@@ -27,11 +27,13 @@ const tracer = new Tracer({
 });
   
 
+app.use(zipkinMiddleware({ 
+  tracer, 
+  serviceName: 'kuma-node' // name of this application 
+})); 
+
+
 // const router = new Router({prefix: '/users'}) // 生成路由前缀
-// app.use(zipkinMiddleware({ 
-//   tracer, 
-//   serviceName: 'kuma-node' // name of this application 
-//   })); 
 app.use(bodyParser());
 app.use(cors());
 
