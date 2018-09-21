@@ -3,42 +3,29 @@ const app = new Koa();
 const cors = require('koa2-cors');
 const bodyParser = require('koa-bodyparser');
 const Router = require('koa-router');
-const model = require('koa-oauth-server/node_modules/oauth2-server/examples/memory/model');
-const index = require('./src/servers/index/s1');
-const login = require('./src/servers/login');
-const oauthserver = require('koa-oauth-server')
+const jwtKoa = require('koa-jwt')
+const Login = require('./src/servers/login');
+const Test = require('./src/servers/test');
+const secret = 'jwt demo'
 
 const router = new Router();
 // const router = new Router({prefix: '/users'}) // 生成路由前缀
 app.use(bodyParser());
 app.use(cors());
 
-app.oauth = oauthserver({
-  model: model,
-  grants: ['password'],
-  debug: true
-});
-
-app.use(app.oauth.authorise());
-
 app.use(async function(ctx, next) {
-  // console.log('headers:', ctx.request.header);
-  console.log('headers:', ctx.req.get('Authorization'));
-  this.body = 'Secret area';
-  this.status = 200;
+  // console.log('headers:', ctx.req.get('Authorization'));
+  console.log('request body:', ctx.request.body);
   next();
 });
- 
-
-app.use(async (ctx, next) => {
-  console.log('request body:', ctx.request.body);
-  await next();
-});
+// jwt 验证
+app.use(jwtKoa({secret}).unless({
+    path: [/^\/login/] //数组中的路径不需要通过jwt验证
+}))
 
 router
-  .post('/login', login)
-  // .get('/test', test)
-  .all('/', index)
+    .post('/login', Login)
+    .get('/test', Test)
 
 app
   .use(router.routes())
