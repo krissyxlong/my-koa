@@ -1,21 +1,21 @@
+const decodeToken = require('./common/decodeToken');
+
 module.exports = async (ctx, next) => {
     const token = ctx.header.authorization  // 获取jwt
-    let payload
+    console.log('token:', token);
+    let payload = 9
+    // let payload = await decodeToken(token);
 
-        // ctx.body = {
-        //     message: payload,
-        //     code: 200
-        // }
-        // next()
-    if (token) {
-        payload = await verify(token.split(' ')[1], secret)  // // 解密，获取payload
+    if (payload) {
         ctx.body = {
-          a: 1
+            code: 200,
+            payload: 0
         }
     } else {
         ctx.body = {
-            message: 'token 错误',
-            code: -1
+            code: 500,
+            msg: 'token 解码错误'
         }
     }
+    next()
 }

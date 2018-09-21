@@ -6,7 +6,8 @@ const Router = require('koa-router');
 const jwtKoa = require('koa-jwt')
 const Login = require('./src/servers/login');
 const Test = require('./src/servers/test');
-const secret = 'jwt demo'
+const Test1 = require('./src/servers/index/s1');
+const { tokoenSecret } = require('./src/config/jwtConfig');
 
 const router = new Router();
 // const router = new Router({prefix: '/users'}) // 生成路由前缀
@@ -19,16 +20,20 @@ app.use(async function(ctx, next) {
   next();
 });
 // jwt 验证
-app.use(jwtKoa({secret}).unless({
+app.use(jwtKoa({secret: tokoenSecret}).unless({
     path: [/^\/login/] //数组中的路径不需要通过jwt验证
 }))
 
 router
     .post('/login', Login)
     .get('/test', Test)
+    .get('/test1', Test1)
 
 app
-  .use(router.routes())
-  .use(router.allowedMethods())
+    .use(router.routes())
+    .use(router.allowedMethods())
+    .use(async(ctx, next) => {
+        console.log('enddddddddddddd');
+    })
 
 app.listen(3005);
