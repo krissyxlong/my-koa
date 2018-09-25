@@ -17,7 +17,7 @@ app.use(cors());
 app.use(async function(ctx, next) {
   // console.log('headers:', ctx.req.get('Authorization'));
   console.log('request body:', ctx.request.body);
-  next();
+  await next();
 });
 // jwt 验证
 app.use(jwtKoa({secret: tokoenSecret}).unless({

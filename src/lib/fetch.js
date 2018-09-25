@@ -1,4 +1,6 @@
+// const fetch = require('isomorphic-fetch');
 const fetch = require('node-fetch');
+
 const {
     Tracer,
     BatchRecorder,
@@ -26,15 +28,13 @@ const {
   const zipkinFetch = wrapFetch(fetch, {tracer, remoteServiceName});
 
 
-module.exports = async (url, options={}) => {
-    console.log('in fetch');
-    if (!url) {
-        return new Error('missing paramter url')
-    }
-    const res = await zipkinFetch(url, {
-        ...options
-    }).then(resonse => {
-        return resonse.text();
+module.exports = (url, options={}) => {
+
+    return new Promise(async (resolve, reject) => {
+        let res = await fetch(url, {
+            ...options
+        })
+        res = await res.text();
+        resolve(res)
     })
-    return res;
 }
