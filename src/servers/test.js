@@ -3,13 +3,13 @@ const decodeToken = require('./common/decodeToken');
 module.exports = async (ctx, next) => {
     const token = ctx.header.authorization  // 获取jwt
     console.log('token:', token);
-    let payload = 9
-    // let payload = await decodeToken(token);
+
+    let payload = await decodeToken(token);
 
     if (payload) {
         ctx.body = {
             code: 200,
-            payload: 0
+            payload: payload
         }
     } else {
         ctx.body = {
@@ -17,5 +17,5 @@ module.exports = async (ctx, next) => {
             msg: 'token 解码错误'
         }
     }
-    next()
+    await next()
 }

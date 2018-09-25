@@ -1,6 +1,9 @@
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const util = require('util');
+const verify = util.promisify(jwt.verify);
+
 const fetch = require('../lib/fetch');
-const { client_id, client_secret, grant_type, login_system, tokoenSecret } = require('../config/jwtConfig');
+const { client_id, client_secret, grant_type, login_system, publicKey, tokenObj } = require('../config/jwtConfig');
 
 module.exports = async (ctx, next) => {
     const { username='user', password='user' } = ctx.request.body
@@ -18,7 +21,8 @@ module.exports = async (ctx, next) => {
 
         let res;
         try {
-            res = await fetch('http://127.0.0.1:3002', {
+            res = await fetch('http://192.168.31.212:8804/oauth/token?username=user&password=user&login_system=FUM&grant_type=kuma_user', {
+            // res = await fetch('http://127.0.0.1:3002', {
                 method: 'POST',
                 body: JSON.stringify(loginInfo),
                 headers: { 
@@ -26,18 +30,31 @@ module.exports = async (ctx, next) => {
                     'Content-Type': 'application/json'
                 },
             })
-            console.log('resssssssssss', res);
+
+            let testToken = jwt.sign(loginInfo, publicKey, { expiresIn: '2h' });
+            console.log('testToken:', testToken);
+
+            let tokenObj = JSON.parse(res);
+            if (tokenObj && tokenObj.access_token) {
+                // 返回 token
+                ctx.body = {
+                    message: 'get token success',
+                    code: 200,
+                    token: tokenObj.access_token
+                }
+            } else {
+                ctx.body = {
+                    message: 'get token fail',
+                    code: 403
+                }
+            }
         } catch(err) {
             console.error('get token api error::', err);
-        }
-        console.log('4');
-
-        const token = jwt.sign(loginInfo, tokoenSecret, {expiresIn: '1h'})
-        // 返回 token
-        ctx.body = {
-            message: '获取token成功',
-            code: 200,
-            token
+            ctx.status = 408;
+            ctx.body = {
+                message: err.message,
+                code: 500
+            }
         }
     } else {
         ctx.status = 500;
@@ -46,5 +63,5 @@ module.exports = async (ctx, next) => {
             code: 500
         }
     }
-    // await next()
+    await next()
 }
