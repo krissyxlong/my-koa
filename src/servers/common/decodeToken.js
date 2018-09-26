@@ -1,17 +1,19 @@
 const jwt = require('jsonwebtoken');
-const jwtKoa = require('koa-jwt');
+const fs = require('fs');
 const util = require('util');
+const path = require('path');
 const verify = util.promisify(jwt.verify);
-const { publicKey } = require('../../config/jwtConfig');
+// const vert = fs.readFileSync('publicKey');
+const vert = fs.readFileSync(path.resolve(__dirname, '../../config/publicKey'));
 
 module.exports = async (token) => {
     let payload
     try {
         const innerToken = token.split(' ')[1]
-        payload = await verify(innerToken, publicKey, {
+        payload = await verify(innerToken, vert, {
             algorithms: ['RS256']
         });
-        console.log('payload ok:', payload);
+        console.log('get payload ok:', payload);
     } catch(err) {
         console.error('decode token err::', err);
     }

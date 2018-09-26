@@ -1,13 +1,9 @@
-const jwt = require('jsonwebtoken');
-const util = require('util');
-const verify = util.promisify(jwt.verify);
-
+const decodeToken = require('./common/decodeToken');
 const fetch = require('../lib/fetch');
-const { client_id, client_secret, grant_type, login_system, publicKey, tokenObj } = require('../config/jwtConfig');
+const { client_id, client_secret, grant_type, login_system } = require('../config/jwtConfig');
 
 module.exports = async (ctx, next) => {
     const { username='user', password='user' } = ctx.request.body
-    // console.log('userInfo:', username, password);
     if(username && password) {
         const loginInfo = {
             username,
@@ -31,17 +27,24 @@ module.exports = async (ctx, next) => {
                 },
             })
 
-            let testToken = jwt.sign(loginInfo, publicKey, { expiresIn: '2h' });
-            console.log('testToken:', testToken);
-
-            let tokenObj = JSON.parse(res);
-            if (tokenObj && tokenObj.access_token) {
-                // 返回 token
-                ctx.body = {
-                    message: 'get token success',
-                    code: 200,
-                    token: tokenObj.access_token
+            let tokenInfo = JSON.parse(res);
+            if (tokenInfo && tokenInfo.access_token) { // token 存在
+                // 返回 token]
+                const token = tokenInfo.access_token;
+                const payload = await decodeToken(token);
+                if (payload) { // 有效token
+                    ctx.body = {
+                        message: 'get token success',
+                        code: 200,
+                        tokenInfo
+                    }
+                } else {
+                    ctx.status = '403';
+                    ctx.body = {
+                        message: 'token expired',
+                    }
                 }
+                
             } else {
                 ctx.body = {
                     message: 'get token fail',

@@ -3,11 +3,16 @@ const app = new Koa();
 const cors = require('koa2-cors');
 const bodyParser = require('koa-bodyparser');
 const Router = require('koa-router');
-const jwtKoa = require('koa-jwt')
+const jwtKoa = require('koa-jwt');
+const fs = require('fs');
+const path = require('path');
 const Login = require('./src/servers/login');
 const Test = require('./src/servers/test');
 const Test1 = require('./src/servers/index/s1');
-const { tokoenSecret, publicKey } = require('./src/config/jwtConfig');
+// const vert = fs.readFileSync('publicKey');
+// console.log('__dirname:', __dirname);
+const vert = fs.readFileSync(path.resolve(__dirname, './src/config/publicKey'));
+
 
 const router = new Router();
 // const router = new Router({prefix: '/users'}) // 生成路由前缀
@@ -20,9 +25,9 @@ app.use(async function(ctx, next) {
   await next();
 });
 // jwt 验证
-// app.use(jwtKoa({secret: publicKey}).unless({
-//     path: [/^\/login/] // 数组中的路径不需要通过jwt验证
-// }))
+app.use(jwtKoa({secret: vert}).unless({
+    path: [/^\/login/] // 数组中的路径不需要通过jwt验证
+}))
 
 router
     .post('/login', Login)
