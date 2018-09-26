@@ -26,7 +26,7 @@ module.exports = async (ctx, next) => {
                     // 'Content-Type': 'application/json'
                 },
             })
-
+            console.log('token res', res);
             let tokenInfo = JSON.parse(res);
             if (tokenInfo && tokenInfo.access_token) { // token 存在
                 // 返回 token]
@@ -46,9 +46,9 @@ module.exports = async (ctx, next) => {
                 }
                 
             } else {
+                ctx.status = 403;
                 ctx.body = {
-                    message: 'get token fail',
-                    code: 403
+                    message: 'get token fail'
                 }
             }
         } catch(err) {

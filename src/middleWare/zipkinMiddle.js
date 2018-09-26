@@ -40,7 +40,7 @@ const {
           });
         });
   
-        next();
+        await next();
       });
     };
   };

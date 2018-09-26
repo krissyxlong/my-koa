@@ -29,14 +29,14 @@ const zipkinFetch = wrapFetch(fetch, {tracer, remoteServiceName});
 
 module.exports = async(url, options={}) => {
     try {
-        let res = await fetch(url, {
+        let res = await zipkinFetch(url, {
             ...options,
             timeout: 60000
         })
         res = await res.text();
         return res
     } catch(e) {
-        console.log('fetch err:', e);
-        throw new Error(e)
+        console.error('fetch err::', e);
+        throw new Error(e);
     }
 }
