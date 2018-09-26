@@ -10,7 +10,6 @@ const Login = require('./src/servers/login');
 const Test = require('./src/servers/test');
 const Test1 = require('./src/servers/index/s1');
 // const vert = fs.readFileSync('publicKey');
-// console.log('__dirname:', __dirname);
 const vert = fs.readFileSync(path.resolve(__dirname, './src/config/publicKey'));
 
 

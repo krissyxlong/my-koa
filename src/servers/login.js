@@ -39,7 +39,7 @@ module.exports = async (ctx, next) => {
                         tokenInfo
                     }
                 } else {
-                    ctx.status = '403';
+                    ctx.status = '401';
                     ctx.body = {
                         message: 'token expired',
                     }

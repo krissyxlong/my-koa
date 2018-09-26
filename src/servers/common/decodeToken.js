@@ -8,8 +8,16 @@ const vert = fs.readFileSync(path.resolve(__dirname, '../../config/publicKey'));
 
 module.exports = async (token) => {
     let payload
+    if (!token) {
+        return null;
+    }
     try {
-        const innerToken = token.split(' ')[1]
+        let innerToken;
+        if (token.indexOf(' ') < 0) {
+            innerToken = token;
+        } else {
+            innerToken = token.split(' ')[1];
+        }
         payload = await verify(innerToken, vert, {
             algorithms: ['RS256']
         });
