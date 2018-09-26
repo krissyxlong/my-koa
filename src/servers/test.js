@@ -2,7 +2,7 @@ const decodeToken = require('./common/decodeToken');
 
 module.exports = async (ctx, next) => {
     const token = ctx.header.authorization  // 获取jwt
-    console.log('token:', token);
+    console.log('header token:', token);
 
     let payload = await decodeToken(token);
 

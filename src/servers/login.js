@@ -23,7 +23,7 @@ module.exports = async (ctx, next) => {
                 body: JSON.stringify(loginInfo),
                 headers: { 
                     'Authorization': 'Basic ' + baseString,
-                    'Content-Type': 'application/json'
+                    // 'Content-Type': 'application/json'
                 },
             })
 
