@@ -40,7 +40,7 @@ module.exports = function expressMiddleware({tracer, serviceName, port = 0}) {
         });
       });
 
-      await next();
+      next();
     });
   };
 };

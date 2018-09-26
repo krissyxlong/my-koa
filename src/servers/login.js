@@ -1,5 +1,4 @@
 const decodeToken = require('./common/decodeToken');
-const fetch = require('../lib/fetch');
 const { client_id, client_secret, grant_type, login_system } = require('../config/jwtConfig');
 
 module.exports = async (ctx, next) => {
@@ -17,7 +16,7 @@ module.exports = async (ctx, next) => {
 
         let res;
         try {
-            res = await fetch('http://192.168.31.212:8804/oauth/token?username=user&password=user&login_system=FUM&grant_type=kuma_user', {
+            res = await ctx.fetch('http://192.168.31.212:8804/oauth/token?username=user&password=user&login_system=FUM&grant_type=kuma_user', {
             // res = await fetch('http://127.0.0.1:3002', {
                 method: 'POST',
                 body: JSON.stringify(loginInfo),
