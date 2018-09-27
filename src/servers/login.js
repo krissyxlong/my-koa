@@ -35,7 +35,9 @@ module.exports = async (ctx, next) => {
                     ctx.body = {
                         message: 'get token success',
                         code: 200,
-                        tokenInfo
+                        data: {
+                            tokenInfo
+                        }
                     }
                 } else {
                     ctx.status = '401';
@@ -52,7 +54,7 @@ module.exports = async (ctx, next) => {
             }
         } catch(err) {
             console.error('get token api error::', err);
-            ctx.status = 408;
+            ctx.status = 502;
             ctx.body = {
                 message: err.message,
                 code: 500
