@@ -7,6 +7,7 @@ const jwtKoa = require('koa-jwt');
 const fs = require('fs');
 const path = require('path');
 const traceMiddleWare = require('./src/middleWare/traceMiddleWare');
+const initMiddleware = require('./src/middleWare/initMiddleWare');
 const startRoute = require('./src/servers/index');
 const fetch = require('./src/lib/fetch');
 const decodeToken = require('./src/servers/common/decodeToken');
@@ -23,21 +24,23 @@ app.use(async function(ctx, next) {
     console.log('request body:', ctx.request.body);
 
     // set global userInfo
-    const token = ctx.header.authorization;
-    console.log('header token:', token);
-    if (token) {
-        let userInfo = await decodeToken(token, next);
-        ctx.userInfo = userInfo;
-    }
-    // set global fetch
-    ctx.fetch = fetch;
+    // const token = ctx.header.authorization;
+    // console.log('header token:', token);
+    // if (token) {
+    //     let userInfo = await decodeToken(token, next);
+    //     ctx.userInfo = userInfo;
+    // }
+    // // set global fetch
+    // ctx.fetch = fetch;
     await next();
-  });
+});
 
 // jwt 验证
-app.use(jwtKoa({secret: vert}).unless({
-    path: [/^\/login/] // 数组中的路径不需要通过jwt验证
-}))
+app
+    .use(initMiddleware)
+    .use(jwtKoa({secret: vert}).unless({
+        path: [/^\/login/] // 数组中的路径不需要通过jwt验证
+    }))
 
 // start route
 startRoute(router);
