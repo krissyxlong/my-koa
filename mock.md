@@ -4,10 +4,10 @@
 ### 1、登录接口
  * api: /login
  * 入参：
-    >  ```
-    >  username: 用户名
-    >  password: 密码
-    >  ```
+    ```
+    username: 用户名
+    password: 密码
+    ```
  * method: POST
  * 返回：
     >  ```
@@ -20,11 +20,10 @@
     >     "jti":"cf9a01fb-2be7-44c9-b47d-263706800930"
     > }
     >  ```
- * 说明
-    >  其他接
+ * 注意
+    >  其他接口必需加上 Authorization 请求头，value 格式为：Bearer ${access_token}
     
 ## 点位信息
-
 ### 1、城市列表接口
  * api: /fso/city
   * 入参：
@@ -60,7 +59,7 @@
     ```
 
 ### 2、区域列表接口
- * api: /fso/area
+  * api: /fso/area
   * 入参：
      ```
      参数	 参数类型  参数说明	是否必填
@@ -70,7 +69,7 @@
   * 返回示例：
       ```
      [
-         -{
+         {
              "name": "昌平区",
              "no": "0001.0003.0035.0284",
              "pinyin": "changpingqu",
@@ -91,4 +90,4 @@
       id	int	地区ID
       type	int	类型
       level	int	层级
-      ```
+     ```
