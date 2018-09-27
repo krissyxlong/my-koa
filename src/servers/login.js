@@ -28,43 +28,34 @@ module.exports = async (ctx, next) => {
             console.log('token res', res);
             let tokenInfo = JSON.parse(res);
             if (tokenInfo && tokenInfo.access_token) { // token 存在
-                // 返回 token]
                 const token = tokenInfo.access_token;
                 const payload = await decodeToken(token);
                 if (payload) { // 有效token
-                    ctx.body = {
-                        message: 'get token success',
-                        code: 200,
-                        data: {
-                            tokenInfo
-                        }
-                    }
+                    ctx.body = tokenInfo
                 } else {
-                    ctx.status = '401';
+                    ctx.status = 401;
                     ctx.body = {
                         message: 'token expired',
                     }
                 }
                 
             } else {
-                ctx.status = 403;
+                ctx.status = 500;
                 ctx.body = {
                     message: 'get token fail'
                 }
             }
         } catch(err) {
             console.error('get token api error::', err);
-            ctx.status = 502;
+            ctx.status = 500;
             ctx.body = {
-                message: err.message,
-                code: 500
+                message: err.message
             }
         }
     } else {
-        ctx.status = 500;
+        ctx.status = 400;
         ctx.body = {
             message: '参数缺失',
-            code: 500
         }
     }
     await next()
