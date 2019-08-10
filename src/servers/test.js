@@ -1,21 +1,13 @@
-const decodeToken = require('./common/decodeToken');
+const waiting = (time) => {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve('test api');
+        }, time);
+        // process.nextTick(resolve);
+    });
+};
 
-module.exports = async (ctx, next) => {
-    const token = ctx.header.authorization  // 获取jwt
-    console.log('header token:', token);
-
-    let payload = await decodeToken(token, next);
-
-    if (payload) {
-        ctx.body = {
-            code: 200,
-            payload: payload
-        }
-    } else {
-        ctx.body = {
-            code: 500,
-            msg: 'token 解码错误'
-        }
-    }
-    await next()
-}
+module.exports = async(ctx, next) => {
+    const res = await waiting(2000);
+    ctx.body = res;
+  }
