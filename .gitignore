@@ -4,3 +4,6 @@
 .idea
 .vscode
 yarn-error.log
+yarn.lock
+.DS_Store
+.src/.DS_Store

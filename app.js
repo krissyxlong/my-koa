@@ -7,6 +7,14 @@ const initMiddleware = require('./src/middleWare/initMiddleware');
 const startRoute = require('./src/servers/index');
 const router = new Router();
 // const router = new Router({prefix: '/users'}) // 生成路由前缀
+setImmediate(function A() {
+    console.log(1);
+    setImmediate(function B(){console.log(2);});
+  });
+  
+  setTimeout(function timeout() {
+    console.log('TIMEOUT FIRED');
+  }, 0);
 
 app.use(bodyParser());
 app.use(cors());
