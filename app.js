@@ -13,19 +13,22 @@ const serve = require('koa-static');
 // app.use(cors());
 
 // for test
-app.use(serve('.'));
+app.use(serve('.'))
+.use(async(ctx, next) => { // for test
+    console.log('in api');
+}); 
 app.use(serve(__dirname + '/static'));
 
 // jwt 验证
 // app.use(initMiddleware);
-// startRoute(router);
+startRoute(router);
 
-// app
-//     .use(router.routes())
-//     .use(router.allowedMethods())
-//     .use(async(ctx, next) => { // for test
-//         console.log('enddddddddddddd');
-//     }); 
+app
+    .use(router.routes())
+    .use(router.allowedMethods())
+    .use(async(ctx, next) => { // for test
+        console.log('enddddddddddddd');
+    }); 
 
 app.listen(8080, () => {
     console.log('-----start success');

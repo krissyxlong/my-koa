@@ -10,6 +10,11 @@
  <head>
      <meta charset="UTF-8">
      <title>Title</title>
+     <script>
+         document.getElementById(loginBtn).onclick = function() {
+             fetch('http://localhost:8080/test');
+         }
+     </script>
  </head>
  <body>
      <div id="hello">
