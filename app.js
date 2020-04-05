@@ -6,35 +6,26 @@ const Router = require('koa-router');
 const initMiddleware = require('./src/middleWare/initMiddleware');
 const startRoute = require('./src/servers/index');
 const router = new Router();
+const serve = require('koa-static');
 // const router = new Router({prefix: '/users'}) // 生成路由前缀
-setImmediate(function A() {
-    console.log(1);
-    setImmediate(function B(){console.log(2);});
-  });
-  
-  setTimeout(function timeout() {
-    console.log('TIMEOUT FIRED');
-  }, 0);
 
-app.use(bodyParser());
-app.use(cors());
+// app.use(bodyParser());
+// app.use(cors());
 
 // for test
-app.use(async function(ctx, next) {
-    console.log('request body:', ctx.request.body);
-    await next();
-});
+app.use(serve('.'));
+app.use(serve(__dirname + '/static'));
 
 // jwt 验证
-app.use(initMiddleware);
-startRoute(router);
+// app.use(initMiddleware);
+// startRoute(router);
 
-app
-    .use(router.routes())
-    .use(router.allowedMethods())
-    .use(async(ctx, next) => { // for test
-        console.log('enddddddddddddd');
-    }); 
+// app
+//     .use(router.routes())
+//     .use(router.allowedMethods())
+//     .use(async(ctx, next) => { // for test
+//         console.log('enddddddddddddd');
+//     }); 
 
 app.listen(8080, () => {
     console.log('-----start success');
