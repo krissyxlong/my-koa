@@ -7,6 +7,18 @@ const Router = require('koa-router');
 const startRoute = require('./src/servers/index');
 const TestAst = require('./src/servers/ast');
 const router = new Router();
+const serve = require('koa-static');
+// const router = new Router({prefix: '/users'}) // 生成路由前缀
+
+// app.use(bodyParser());
+// app.use(cors());
+
+// for test
+// app.use(serve('.'))
+// .use(async(ctx, next) => { // for test
+//     console.log('in api');
+// });
+// app.use(serve(__dirname + '/static'));
 
 TestAst();
 // jwt 验证

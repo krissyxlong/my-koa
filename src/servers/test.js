@@ -8,6 +8,6 @@ const waiting = (time) => {
 };
 
 module.exports = async(ctx, next) => {
-    const res = await waiting(2000);
-    ctx.body = res;
+    // const res = await waiting(2000);
+    ctx.body = {a: 1};
   }
